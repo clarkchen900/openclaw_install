@@ -126,18 +126,24 @@ configure_openclaw() {
 install_plugins() {
     echo ""
     print_step "Installing optional plugins..."
-    echo "  1. Feishu (飞书) - npm available"
-    echo "  2. Skip (configure later)"
-    echo ""
-    echo "Note: Other plugins (DingTalk/Telegram/Discord) require manual setup"
+    echo "  1. Feishu (飞书)"
+    echo "  2. QQ (via OneBot/NapCat)"
+    echo "  3. WeChat"
+    echo "  4. All of above"
+    echo "  5. Skip"
     echo ""
     
-    read -p "Select plugins to install (1-2): " -n 1 -r
+    read -p "Select plugins to install (1-5): " -n 1 -r
     echo
     
     case $REPLY in
         1) npm install -g @larksuiteoapi/feishu-openclaw-plugin ;;
-        2) print_warning "Skipping plugin installation" ;;
+        2) npm install -g @kirigaya/openclaw-onebot ;;
+        3) npm install -g @canghe/openclaw-wechat ;;
+        4) 
+            npm install -g @larksuiteoapi/feishu-openclaw-plugin @kirigaya/openclaw-onebot @canghe/openclaw-wechat 2>/dev/null || true
+            ;;
+        5) print_warning "Skipping plugin installation" ;;
         *) print_warning "Invalid option, skipping" ;;
     esac
     
