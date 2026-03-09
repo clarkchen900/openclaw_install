@@ -1,14 +1,8 @@
-# OpenClaw macOS Installer
+# OpenClaw Installer for macOS
 
-One-click script to install OpenClaw on macOS.
+A simple one-click script to install OpenClaw on your Mac.
 
-## Features
-- Installs Homebrew, Node.js, npm
-- Installs OpenClaw globally
-- Optional plugins: DingTalk, Feishu, Telegram, Discord
-- Launches onboarding wizard
-
-## Usage
+## Quick Install
 
 ```bash
 curl -O https://raw.githubusercontent.com/clarkchen900/openclaw_install/main/install-openclaw-macos.sh
@@ -16,9 +10,27 @@ chmod +x install-openclaw-macos.sh
 ./install-openclaw-macos.sh
 ```
 
+## What It Does
+
+1. Checks macOS version
+2. Installs Homebrew (if needed)
+3. Installs Node.js & npm
+4. Installs OpenClaw globally
+5. Optional: Install plugins (DingTalk, Feishu, Telegram, Discord)
+6. Launches onboarding wizard
+7. Starts OpenClaw gateway
+
 ## Requirements
-- macOS 10.15 or later
+
+- macOS 10.15+
 - Internet connection
 
+## After Install
+
+- Open http://localhost:18789
+- Or use TUI: `openclaw tui`
+- Check status: `openclaw status`
+
 ## License
+
 MIT
