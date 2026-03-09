@@ -17,15 +17,20 @@ chmod +x install-openclaw-macos.sh
 - ✅ Fedora/RHEL/CentOS (dnf/yum)
 - ✅ Arch Linux (pacman)
 
+## Features
+
+- **Smart Detection**: Checks if Node.js, npm, and OpenClaw are already installed
+- **Skip Existing**: If OpenClaw is already installed, prompts to install plugins only
+- **Multi-OS Support**: Works on macOS and Linux (apt/dnf/yum/pacman)
+
 ## What It Does
 
 1. Detects your OS
-2. Installs package manager if needed (Homebrew on macOS)
-3. Installs Node.js & npm
-4. Installs OpenClaw globally
-5. Optional plugins: Feishu, QQ, WeChat
-6. Launches onboarding wizard
-7. Starts OpenClaw gateway
+2. Checks if Node.js is installed (skip if yes)
+3. Checks if npm is installed (skip if yes)
+4. Checks if OpenClaw is installed:
+   - **If YES**: Prompt to install plugins only, then start
+   - **If NO**: Install OpenClaw, then prompt for plugins
 
 ## Supported Plugins
 
