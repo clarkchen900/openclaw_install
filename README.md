@@ -16,9 +16,17 @@ chmod +x install-openclaw-macos.sh
 2. Installs Homebrew (if needed)
 3. Installs Node.js & npm
 4. Installs OpenClaw globally
-5. Optional: Install plugins (DingTalk, Feishu, Telegram, Discord)
+5. Optional plugins: Feishu, QQ, WeChat
 6. Launches onboarding wizard
 7. Starts OpenClaw gateway
+
+## Supported Plugins
+
+| Plugin | Package | Description |
+|--------|---------|-------------|
+| Feishu | @larksuiteoapi/feishu-openclaw-plugin | 飞书/ Lark |
+| QQ | @kirigaya/openclaw-onebot | Via OneBot/NapCat |
+| WeChat | @canghe/openclaw-wechat | 微信 |
 
 ## Requirements
 
