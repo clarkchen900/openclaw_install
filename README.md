@@ -25,7 +25,7 @@ chmod +x install-openclaw-macos.sh
 | Plugin | Package | Description |
 |--------|---------|-------------|
 | Feishu | @larksuiteoapi/feishu-openclaw-plugin | 飞书/ Lark |
-| QQ | @kirigaya/openclaw-onebot | Via OneBot/NapCat |
+| QQ | @sliverp/qqbot | QQ bot (sliverp) |
 | WeChat | @canghe/openclaw-wechat | 微信 |
 
 ## Requirements
