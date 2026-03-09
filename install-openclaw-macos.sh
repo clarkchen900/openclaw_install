@@ -126,26 +126,18 @@ configure_openclaw() {
 install_plugins() {
     echo ""
     print_step "Installing optional plugins..."
-    echo "  1. DingTalk"
-    echo "  2. Feishu (飞书)"
-    echo "  3. Telegram"
-    echo "  4. Discord"
-    echo "  5. All of the above"
-    echo "  6. Skip (no plugins)"
+    echo "  1. Feishu (飞书) - npm available"
+    echo "  2. Skip (configure later)"
+    echo ""
+    echo "Note: Other plugins (DingTalk/Telegram/Discord) require manual setup"
     echo ""
     
-    read -p "Select plugins to install (1-6): " -n 1 -r
+    read -p "Select plugins to install (1-2): " -n 1 -r
     echo
     
     case $REPLY in
-        1) npm install -g @openclaw/plugin-dingtalk ;;
-        2) npm install -g @openclaw/plugin-feishu ;;
-        3) npm install -g @openclaw/plugin-telegram ;;
-        4) npm install -g @openclaw/plugin-discord ;;
-        5) 
-            npm install -g @openclaw/plugin-dingtalk @openclaw/plugin-feishu @openclaw/plugin-telegram @openclaw/plugin-discord 2>/dev/null || true
-            ;;
-        6) print_warning "Skipping plugin installation" ;;
+        1) npm install -g @larksuiteoapi/feishu-openclaw-plugin ;;
+        2) print_warning "Skipping plugin installation" ;;
         *) print_warning "Invalid option, skipping" ;;
     esac
     
