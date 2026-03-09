@@ -138,7 +138,7 @@ install_plugins() {
     
     case $REPLY in
         1) npm install -g @larksuiteoapi/feishu-openclaw-plugin ;;
-        2) npm install -g @kirigaya/openclaw-onebot ;;
+        2) npm install -g @sliverp/qqbot ;;
         3) npm install -g @canghe/openclaw-wechat ;;
         4) 
             npm install -g @larksuiteoapi/feishu-openclaw-plugin @kirigaya/openclaw-onebot @canghe/openclaw-wechat 2>/dev/null || true
