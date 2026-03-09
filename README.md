@@ -1,6 +1,6 @@
-# OpenClaw Installer for macOS
+# OpenClaw Installer for macOS & Linux
 
-A simple one-click script to install OpenClaw on your Mac.
+A simple one-click script to install OpenClaw on your system.
 
 ## Quick Install
 
@@ -10,10 +10,17 @@ chmod +x install-openclaw-macos.sh
 ./install-openclaw-macos.sh
 ```
 
+## Supported OS
+
+- ✅ macOS
+- ✅ Debian/Ubuntu (apt)
+- ✅ Fedora/RHEL/CentOS (dnf/yum)
+- ✅ Arch Linux (pacman)
+
 ## What It Does
 
-1. Checks macOS version
-2. Installs Homebrew (if needed)
+1. Detects your OS
+2. Installs package manager if needed (Homebrew on macOS)
 3. Installs Node.js & npm
 4. Installs OpenClaw globally
 5. Optional plugins: Feishu, QQ, WeChat
@@ -25,12 +32,12 @@ chmod +x install-openclaw-macos.sh
 | Plugin | Package | Description |
 |--------|---------|-------------|
 | Feishu | @larksuiteoapi/feishu-openclaw-plugin | 飞书/ Lark |
-| QQ | @sliverp/qqbot | QQ bot (sliverp) |
+| QQ | @sliverp/qqbot | QQ bot |
 | WeChat | @canghe/openclaw-wechat | 微信 |
 
 ## Requirements
 
-- macOS 10.15+
+- macOS 10.15+ / Linux (see above)
 - Internet connection
 
 ## After Install
