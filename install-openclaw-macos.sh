@@ -67,7 +67,31 @@ detect_os() {
     esac
 }
 
-# Check for package manager
+# Check OS and show welcome
+check_os() {
+    OS=$(detect_os)
+    case "$OS" in
+        macos)
+            print_success "Running on macOS $(sw_vers -productVersion)"
+            ;;
+        debian)
+            . /etc/os-release
+            print_success "Running on $NAME"
+            ;;
+        rhel)
+            . /etc/os-release
+            print_success "Running on $NAME"
+            ;;
+        arch)
+            print_success "Running on Arch Linux"
+            ;;
+        *)
+            print_warning "Unknown OS, trying to proceed anyway..."
+            ;;
+    esac
+}
+
+# Check package manager
 check_package_manager() {
     OS=$(detect_os)
     
@@ -120,84 +144,71 @@ check_package_manager() {
     esac
 }
 
-# Check OS and show welcome
-check_os() {
-    OS=$(detect_os)
-    case "$OS" in
-        macos)
-            print_success "Running on macOS $(sw_vers -productVersion)"
-            ;;
-        debian)
-            . /etc/os-release
-            print_success "Running on $NAME"
-            ;;
-        rhel)
-            . /etc/os-release
-            print_success "Running on $NAME"
-            ;;
-        arch)
-            print_success "Running on Arch Linux"
-            ;;
-        *)
-            print_warning "Unknown OS, trying to proceed anyway..."
-            ;;
-    esac
+# Check if Node.js is installed
+check_node() {
+    print_step "Checking Node.js..."
+    if command -v node &> /dev/null; then
+        NODE_VERSION=$(node --version)
+        print_success "Node.js is installed: $NODE_VERSION"
+        return 0
+    else
+        print_warning "Node.js is NOT installed"
+        return 1
+    fi
+}
+
+# Check if npm is installed
+check_npm() {
+    print_step "Checking npm..."
+    if command -v npm &> /dev/null; then
+        NPM_VERSION=$(npm --version)
+        print_success "npm is installed: v$NPM_VERSION"
+        return 0
+    else
+        print_warning "npm is NOT installed"
+        return 1
+    fi
+}
+
+# Check if OpenClaw is installed
+check_openclaw() {
+    print_step "Checking OpenClaw..."
+    if command -v openclaw &> /dev/null; then
+        CLAW_VERSION=$(openclaw --version 2>&1 | head -1)
+        print_success "OpenClaw is installed: $CLAW_VERSION"
+        return 0
+    else
+        print_warning "OpenClaw is NOT installed"
+        return 1
+    fi
 }
 
 # Install Node.js
 install_node() {
-    print_step "Checking Node.js..."
-    if command -v node &> /dev/null; then
-        NODE_VERSION=$(node --version)
-        print_success "Node.js is already installed: $NODE_VERSION"
-    else
-        print_warning "Node.js not found. Installing..."
-        
-        PKG_MGR=$(check_package_manager)
-        
-        case "$PKG_MGR" in
-            brew)
-                brew install node
-                ;;
-            apt)
-                curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
-                ;;
-            dnf|yum)
-                curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && yum install -y nodejs
-                ;;
-            pacman)
-                pacman -S --noconfirm nodejs npm
-                ;;
-        esac
-        print_success "Node.js installed"
-    fi
-
-    print_step "Checking npm..."
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        print_success "npm is already installed: v$NPM_VERSION"
-    else
-        print_error "npm installation failed"
-        exit 1
-    fi
+    print_warning "Installing Node.js..."
+    
+    PKG_MGR=$(check_package_manager)
+    
+    case "$PKG_MGR" in
+        brew)
+            brew install node
+            ;;
+        apt)
+            curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+            ;;
+        dnf|yum)
+            curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && yum install -y nodejs
+            ;;
+        pacman)
+            pacman -S --noconfirm nodejs npm
+            ;;
+    esac
+    print_success "Node.js installed"
 }
 
 # Install OpenClaw
 install_openclaw() {
-    print_step "Installing OpenClaw..."
-    
-    # Check if already installed
-    if command -v openclaw &> /dev/null; then
-        print_warning "OpenClaw is already installed"
-        read -p "Do you want to reinstall? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_success "Keeping existing installation"
-            return
-        fi
-    fi
-
-    # Install OpenClaw globally
+    print_warning "Installing OpenClaw..."
     npm install -g openclaw
     
     if command -v openclaw &> /dev/null; then
@@ -287,18 +298,61 @@ main() {
     print_header
     
     check_os
-    install_node
-    install_openclaw
-    install_plugins
     
-    echo ""
-    read -p "Start OpenClaw now? (Y/n): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        print_warning "OpenClaw not started. Run 'openclaw gateway start' when ready."
+    # Check Node.js
+    if check_node; then
+        echo "  → Skipping Node.js installation"
     else
-        configure_openclaw
-        start_openclaw
+        install_node
+    fi
+    
+    # Check npm
+    if check_npm; then
+        echo "  → Skipping npm installation"
+    else
+        print_error "npm not found. Please install Node.js first."
+        exit 1
+    fi
+    
+    # Check OpenClaw
+    if check_openclaw; then
+        echo "  → OpenClaw already installed"
+        
+        echo ""
+        echo "========================================"
+        echo -e "${GREEN}  OpenClaw is Ready!${NC}"
+        echo "========================================"
+        echo ""
+        
+        # Ask about plugins
+        read -p "Install or update plugins? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            install_plugins
+        fi
+        
+        # Ask to start
+        read -p "Start OpenClaw now? (Y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            print_warning "OpenClaw not started. Run 'openclaw gateway start' when ready."
+        else
+            start_openclaw
+        fi
+    else
+        # OpenClaw not installed, do full setup
+        install_openclaw
+        install_plugins
+        
+        echo ""
+        read -p "Start OpenClaw now? (Y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            print_warning "OpenClaw not started. Run 'openclaw gateway start' when ready."
+        else
+            configure_openclaw
+            start_openclaw
+        fi
     fi
 }
 
